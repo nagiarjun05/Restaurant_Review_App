@@ -1,32 +1,42 @@
 const express=require('express');
-const app=express();
 const cors=require('cors');
-const bodyParser=require('body-parser');
-const dotenv=require('dotenv');
-const path=require('path');
+const app=express();
 const sequelize =require('./util/database')
 
-
+const dotenv=require('dotenv');
 dotenv.config();
 
+const Restaurant=require('./models/restaurant')
+const Review=require('./models/review')
+const bodyParser=require('body-parser');
 
 app.use(cors());
 
+const path=require('path');
+const restaurantRoutes=require('./routes/restaurant');
+const reviewRoutes=require('./routes/review');
+
+// console.log(process.env.DB_NAME)
 
 app.use(bodyParser.json());
 
+app.use('/restaurant',restaurantRoutes);
+app.use('/review',reviewRoutes);
 
 app.use((req,res)=>{
     res.sendFile(path.join(__dirname, `views/${req.url}`))
 });
 
 
+Restaurant.hasMany(Review);
+Review.belongsTo(Restaurant);
+
 sequelize
 .sync()
 // .sync({force: true})
 .then(()=>{
     app.listen(8000,()=>{
-        console.log(`Server for ${process.env.PROJECT_NAME}`)
+        console.log(`Server is running`)
     });
 })
 .catch(err=>console.log(err))
