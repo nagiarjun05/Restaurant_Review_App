@@ -9,10 +9,24 @@
 </head>
 <body>
     <header>
+        <button id="back">Back</button>
     </header>
     <h3 >Restaurant Details</h3>
     <div id="res-details-container">
-        <ul id="res-details"></ul>
+    </div>
+    <div id="reviews-container">
+        <ul id="reviews-list"></ul>
+        <section id="review-pagination">
+        </section>
+    </div>
+    <div id="blog-editing">
+        <h1>Add a review</h1>
+        <form id="form" style="display: block;">
+            <textarea  id="review-content" cols="30" rows="5" placeholder="Enter your review here..."></textarea>
+            <br>
+            <br>
+            <button id="reviewpost">Add review</button>
+        </form>
     </div>
     <script src="restaurant.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
