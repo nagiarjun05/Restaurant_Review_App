@@ -28,7 +28,7 @@ const getRestaurants=async function(req,res){
     }
     catch(err){
         console.log(err)
-        res.status(500).json({
+        return res.status(500).json({
             message: "Unable to retrieve Restaurants !"
         })
     }

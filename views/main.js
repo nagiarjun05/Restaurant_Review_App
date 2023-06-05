@@ -1,7 +1,7 @@
 const restaurantList=document.getElementById('res-list');
 const parent_element=document.querySelector('body');
 const restaurantPagination=document.getElementById('restaurant-pagination');
-
+const adminLogin=document.getElementById('admin-login');
 
 window.addEventListener('DOMContentLoaded',(e)=>{
     e.preventDefault()
@@ -42,6 +42,11 @@ parent_element.addEventListener('click',(e)=>{
     }
 });
 
+
+adminLogin.addEventListener('click',(e)=>{
+    e.preventDefault()
+    window.location.href='/adminlogin.html'
+});
 
 
 function pagination(currentPage,hasNextPage,nextPage,hasPreviousPage,previousPage,pages,cb){

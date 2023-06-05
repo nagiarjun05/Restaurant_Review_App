@@ -15,21 +15,21 @@ app.use(cors());
 const path=require('path');
 const restaurantRoutes=require('./routes/restaurant');
 const reviewRoutes=require('./routes/review');
-
-// console.log(process.env.DB_NAME)
+const adminRoutes=require('./routes/admin');
 
 app.use(bodyParser.json());
 
 app.use('/restaurant',restaurantRoutes);
 app.use('/review',reviewRoutes);
+app.use('/admin',adminRoutes);
 
 app.use((req,res)=>{
     res.sendFile(path.join(__dirname, `views/${req.url}`))
 });
 
-
 Restaurant.hasMany(Review);
 Review.belongsTo(Restaurant);
+
 
 sequelize
 .sync()
@@ -40,4 +40,3 @@ sequelize
     });
 })
 .catch(err=>console.log(err))
-
