@@ -19,14 +19,16 @@ const adminRoutes=require('./routes/admin');
 
 app.use(bodyParser.json());
 
-app.use('/restaurant',restaurantRoutes);
 app.use('/review',reviewRoutes);
 app.use('/admin',adminRoutes);
+app.use(restaurantRoutes);
 
 app.use((req,res)=>{
     res.sendFile(path.join(__dirname, `views/${req.url}`))
 });
 
+
+//Association between tables
 Restaurant.hasMany(Review);
 Review.belongsTo(Restaurant);
 

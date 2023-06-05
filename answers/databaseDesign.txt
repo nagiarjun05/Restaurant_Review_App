@@ -1,0 +1,61 @@
+1:- 
+As our requirement is to have details about a restaurant and reviews that restaurant has. 
+I have created three MySql database tables.
+
+Name of these three tables are 'restaurant' table, 'review' table, and 'admin' table.
+
+'restaurant' table has four columns by the name of id, name, address, and description.
+'review' table has three columns by the name of id, review, restaurantId.
+'admin' table has three columns by the name of id, name, email, password.
+
+'review' table is connected with 'restaurant' table through a column which contains foreign key(restaurantId).
+However, there wasn't no need to make a admin table, but i have created it just to make application more functional and real.
+
+`Restaurants` (
+    `id` INTEGER NOT NULL auto_increment , 
+    `name` VARCHAR(255) NOT NULL UNIQUE, 
+    `address` VARCHAR(255) NOT NULL, 
+    `details` VARCHAR(255) NOT NULL
+    )
+`Reviews` (
+    `id` INTEGER NOT NULL auto_increment , 
+    `review` VARCHAR(255) NOT NULL, 
+    `RestaurantId` INTEGER  FOREIGN KEY  (References to `id` column of `Restaurants` table )
+    )
+`admins` (
+    `id` INTEGER NOT NULL auto_increment ,
+    `name` VARCHAR(255), 
+    `email` VARCHAR(255) NOT NULL UNIQUE, 
+    `password` VARCHAR(255) NOT NULL
+    )
+
+
+2:- 
+I have created the association between these tables by sequelize ORM. Code snippet is below
+
+Restaurant.hasMany(Review);
+Review.belongsTo(Restaurant);
+reference :- you can find it in app.js file at line number 32.
+
+For models defination or creation code you can refer to 'models/' folder.
+
+
+3:- 
+SQL QUERY-
+SELECT `Restaurant`.`id`, `Restaurant`.`name`, count(`reviews`.`id`) AS `reviewCount` FROM `Restaurants` AS `Restaurant` 
+LEFT OUTER JOIN `Reviews` AS `Reviews` ON `Restaurant`.`id` = `Reviews`.`RestaurantId` GROUP BY `restaurant`.`id`;
+
+By ORM-
+Restaurant is model for restaurant table
+
+Restaurant.findAll({
+    attributes:['id','name',[sequelize.fn('count',sequelize.col('reviews.id')),'reviewCount']],
+    include:[
+        {
+            model: Review,
+            attributes:[]
+        }
+    ],
+    group:['restaurant.id']
+});
+reference :- you can find it in controllers/admin.js file at line number 80.

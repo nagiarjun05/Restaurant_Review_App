@@ -5,6 +5,7 @@ const restaurantId=localStorage.getItem('restaurantId')
 const restaurantPagination=document.getElementById('review-pagination');
 const postreview=document.getElementById('reviewpost')
 const reviewContent=document.getElementById("review-content");
+const adminLogin=document.getElementById('admin-login');
 const back=document.getElementById('back');
 
 window.addEventListener('DOMContentLoaded',(e)=>{
@@ -18,7 +19,7 @@ window.addEventListener('DOMContentLoaded',(e)=>{
 const showRestaurantDetails=function(page){
     axios({
         method:'get',
-        url: `http://localhost:8000/restaurant/restaurant?restaurantId=${restaurantId}&page=${page}`,
+        url: `http://localhost:8000/restaurant?restaurantId=${restaurantId}&page=${page}`,
     })
     .then(res=>{
         console.log(res)
@@ -55,7 +56,7 @@ postreview.addEventListener('click',async (e)=>{
         
         const res=await axios({
             method:'post',
-            url:`http://localhost:8000/review/postreview`,
+            url:`http://localhost:8000/review/post-review`,
             data:{
                 reviewContent: reviewCon,
                 restaurantId:restaurantId
@@ -81,6 +82,12 @@ back.addEventListener('click',(e)=>{
     e.preventDefault()
     localStorage.removeItem('restaurantId');
     window.location.href='/index.html'
+});
+
+
+adminLogin.addEventListener('click',(e)=>{
+    e.preventDefault()
+    window.location.href='/adminlogin.html'
 });
 
 

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded',(e)=>{
 const showRestaurants=function(page){
     axios({
         method:'get',
-        url: `http://localhost:8000/restaurant/restaurants?page=${page}`,
+        url: `http://localhost:8000/restaurants?page=${page}`,
     })
     .then(res=>{
         console.log(res.data.restaurants)

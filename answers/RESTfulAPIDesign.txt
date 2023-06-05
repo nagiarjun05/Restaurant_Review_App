@@ -1,0 +1,9 @@
+1:-
+
+HTTP Verb      API Endpoint        Brief description
+GET           /restaurant          Get a single restaurant details and details of reviews which it has
+GET           /restaurants         Get all the restaurants details
+POST          /review/post-review  Add a review to the restaurant
+POST          /admin/login         To login the admin user
+POST          /admin/signup        To create a new admin user
+POST          /admin/restaurants   Get all the details of restaurant along with it's reviews count
