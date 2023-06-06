@@ -3,13 +3,13 @@ As our requirement is to have details about a restaurant and reviews that restau
 I have created three MySql database tables.
 
 Name of these three tables are 'restaurant' table, 'review' table, and 'admin' table.
+However, there wasn't no need to make a admin table, but i have created it just to make application more functional and real.
 
 'restaurant' table has four columns by the name of id, name, address, and description.
 'review' table has three columns by the name of id, review, restaurantId.
 'admin' table has three columns by the name of id, name, email, password.
 
-'review' table is connected with 'restaurant' table through a column which contains foreign key(restaurantId).
-However, there wasn't no need to make a admin table, but i have created it just to make application more functional and real.
+'review' table is connected with 'restaurant' table through a column(restaurantId) which contains foreign key.
 
 `Restaurants` (
     `id` INTEGER NOT NULL auto_increment , 

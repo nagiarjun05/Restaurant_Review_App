@@ -1,11 +1,19 @@
 // const a = [1, 3, 5, 2, 4]  
 // const result1 = [1, 5, 4] 
-console.log(a.filter((item,i)=>i%2==0))
+let res=a.filter((item,i)=>i%2==0)
+or 
+const res=[]
+for(let i=0;i<a.length;i+=2) res.push(a[i])
+console.log(res)
+
 
 
 // const a = [1, 3, 5, 2, 4]
 // const result2 = [ 1, 9, 25, 4, 16] 
-console.log(a.map(i=>i*i))
+let res=a.map(i=>i*i)
+console.log(res)
+
+
 
 // const a = [1, 3, 5, 2, 4]
 // const result3 = [1, 25, 16]
@@ -13,4 +21,6 @@ let res=[]
 a.forEach((item,i)=>{
     if(i%2==0) res.push(item*item)
 });
+or
+for(let i=0;i<a.length;i+=2) res.push(a[i]*a[i])
 console.log(res)
