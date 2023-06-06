@@ -3,9 +3,6 @@ const cors=require('cors');
 const app=express();
 const sequelize =require('./util/database')
 
-const dotenv=require('dotenv');
-dotenv.config();
-
 const Restaurant=require('./models/restaurant')
 const Review=require('./models/review')
 const bodyParser=require('body-parser');
@@ -23,9 +20,7 @@ app.use('/review',reviewRoutes);
 app.use('/admin',adminRoutes);
 app.use(restaurantRoutes);
 
-app.use((req,res)=>{
-    res.sendFile(path.join(__dirname, `views/${req.url}`))
-});
+app.use((req,res)=>res.sendFile(path.join(__dirname, `views/${req.url}`)));
 
 
 //Association between tables
@@ -36,9 +31,5 @@ Review.belongsTo(Restaurant);
 sequelize
 .sync()
 // .sync({force: true})
-.then(()=>{
-    app.listen(8000,()=>{
-        console.log(`Server is running`)
-    });
-})
+.then(()=>app.listen(8000,()=>console.log(`Server is running`)))
 .catch(err=>console.log(err))

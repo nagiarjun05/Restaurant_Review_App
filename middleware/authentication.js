@@ -7,13 +7,8 @@ const authentication=async (req, res, next)=>{
         const user=Admin.findByPk(admin.adminId)
         req.user=user;
         next();
-        // .then((user)=>{
-        //     req.user=user;
-        //     next();
-        // })
     }
     catch(err){
-        console.log(err);
         return res.status(401).json({success: false});
     }
 };

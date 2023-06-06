@@ -9,14 +9,9 @@ window.addEventListener('DOMContentLoaded',(e)=>{
     showRestaurants(page)
 });
 
-const showRestaurants=function(page){
-    axios({
-        method:'get',
-        url: `http://localhost:8000/admin/restaurants?page=${page}`,
-        headers:{'Authorization':token}
-    })
-    .then(res=>{
-        console.log(res)
+const showRestaurants=async function(page){
+    try {
+        const res =await axios({ method:'get', url: `http://localhost:8000/admin/restaurants?page=${page}`, headers:{'Authorization':token} });
         restaurantList.innerHTML='';
         res.data.restReviewDet.forEach(element => {
             var li = document.createElement('li');
@@ -24,8 +19,12 @@ const showRestaurants=function(page){
             li.innerHTML=`<a class="resRev" id="resRev${element.id}">Restaurant - ${element.name} , Total Revies - ${element.reviewCount}</a>`;
             restaurantList.appendChild(li);
         });
-    })
-    .catch(err=>console.log(err))
+    }
+    catch(err) { 
+        if (err.response.status === 404) return alert(err.response.data.message);
+        else if (err.response.status === 500)  return alert(err.response.data.message);
+        else console.log(err)
+    }
 };
 
 

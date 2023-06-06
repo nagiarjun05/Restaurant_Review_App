@@ -10,19 +10,14 @@ const back=document.getElementById('back');
 
 window.addEventListener('DOMContentLoaded',(e)=>{
     e.preventDefault()
-    console.log("content is loading")
     const page=1
     showRestaurantDetails(page)
 });
 
 
-const showRestaurantDetails=function(page){
-    axios({
-        method:'get',
-        url: `http://localhost:8000/restaurant?restaurantId=${restaurantId}&page=${page}`,
-    })
-    .then(res=>{
-        console.log(res)
+const showRestaurantDetails=async function(page){
+    try{
+        const res=await axios({ method:'get', url: `http://localhost:8000/restaurant?restaurantId=${restaurantId}&page=${page}` })
         restaurantDetailContainer.innerHTML=`
         <h1>${res.data.restaurant.name}</h1>
         <h2>${res.data.restaurant.address}</h2>
@@ -36,12 +31,13 @@ const showRestaurantDetails=function(page){
                 reviewList.appendChild(li);
             });
             pagination(res.data.currentPage,res.data.hasNextPage,res.data.nextPage,res.data.hasPreviousPage,res.data.previousPage,restaurantPagination,showRestaurantDetails)
-        }else{
-            reviewList.innerHTML=`
-            <h3>No one has added their reviews for this restaurant yet, please add a review !!</h3>`
         }
-    })
-    .catch(err=>console.log(err))
+        else reviewList.innerHTML=`<h3>No one has added their reviews for this restaurant yet, please add a review !!</h3>`
+    }
+    catch(err){
+        if (err.response.status === 500)  return alert(err.response.data.message);
+        else console.log(err)
+    }
 };
 
 
@@ -49,11 +45,8 @@ const showRestaurantDetails=function(page){
 postreview.addEventListener('click',async (e)=>{
     try{
         e.preventDefault();
-        if (!reviewContent.value){
-            return alert("Please enter review first before posting")
-        }
+        if (!reviewContent.value) return alert("Please enter review first before posting")
         const  reviewCon=reviewContent.value;
-        
         const res=await axios({
             method:'post',
             url:`http://localhost:8000/review/post-review`,
@@ -67,13 +60,8 @@ postreview.addEventListener('click',async (e)=>{
         window.location.href="./restaurant.html"
     }
     catch(err){
-        if (err.response.status === 400) {
-            alert(err.response.data.message);
-        } else if (err.response.status === 403) {
-            alert(err.response.data.message);
-        } else if (err.response.status === 500) {
-            alert(err.response.data.message);
-        }
+        if (err.response.status === 500)  return alert(err.response.data.message);
+        else console.log(err)
     };
 });
 
@@ -97,24 +85,18 @@ function pagination(currentPage,hasNextPage,nextPage,hasPreviousPage,previousPag
         const prevBtn=document.createElement('button')
         prevBtn.innerHTML=previousPage;
         pages.appendChild(prevBtn);
-        prevBtn.addEventListener('click',()=>{
-            cb(previousPage)
-            });
+        prevBtn.addEventListener('click',()=>cb(previousPage));
     };
     
     const curBtn=document.createElement('button')
     curBtn.innerHTML=currentPage;
     pages.appendChild(curBtn);
-    curBtn.addEventListener('click',(e)=>{        
-        cb(currentPage)
-    });
+    curBtn.addEventListener('click',(e)=>cb(currentPage));
 
     if (hasNextPage){
         const nexBtn=document.createElement('button')
         nexBtn.innerHTML=nextPage;
         pages.appendChild(nexBtn);
-        nexBtn.addEventListener('click',()=>{
-            cb(nextPage)
-            });
+        nexBtn.addEventListener('click',()=>cb(nextPage));
     };
 };

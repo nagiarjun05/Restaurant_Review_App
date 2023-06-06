@@ -6,16 +6,10 @@ const postReview=async function(req,res){
 
         await Review.create({review:reviewContent,RestaurantId:restaurantId})
         
-        return res.status(201).json({
-            success: true,
-            message:"Review added succesfully!!"    
-        })
+        return res.status(201).json({ success: true, message:"Review added succesfully!!" })
     }
     catch(err){
-        console.log(err)
-        res.status(500).json({
-            message: "Unable to post your review !"
-        })
+        res.status(500).json({ message: "Unable to post your review !" })
     }
 };
 

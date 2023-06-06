@@ -27,10 +27,7 @@ const getRestaurants=async function(req,res){
         return res.status(404).json({message: "There is not any restaurant in the list!"})
     }
     catch(err){
-        console.log(err)
-        return res.status(500).json({
-            message: "Unable to retrieve Restaurants !"
-        })
+        return res.status(500).json({ message: "Unable to retrieve Restaurants !" })
     }
 };
 
@@ -38,33 +35,31 @@ const getRestaurants=async function(req,res){
 const getRestaurantDetails=async function(req,res){
     try{
         const restaurantId=req.query.restaurantId
+        const page= +req.query.page || 1;
 
         const restaurant=await Restaurant.findByPk(restaurantId);
 
-        const page= +req.query.page || 1;
         const totalCount = await Review.count({where:{RestaurantId:restaurantId}})
         const Reviews=await Review.findAll({
             where:{RestaurantId:restaurantId},
             offset: (page-1)*ITEM_PER_PAGE,
             limit:ITEM_PER_PAGE
-            })
+        })
+        
         return res.status(201).json({
-                success: true,
-                restaurant: restaurant,
-                reviews:Reviews,
-                currentPage:page,
-                hasNextPage:ITEM_PER_PAGE*page<totalCount,
-                nextPage:page+1,
-                hasPreviousPage:page>1,
-                previousPage:page-1,
-                lastPage:Math.ceil(totalCount/ITEM_PER_PAGE)
-            })
+            success: true,
+            restaurant: restaurant,
+            reviews:Reviews,
+            currentPage:page,
+            hasNextPage:ITEM_PER_PAGE*page<totalCount,
+            nextPage:page+1,
+            hasPreviousPage:page>1,
+            previousPage:page-1,
+            lastPage:Math.ceil(totalCount/ITEM_PER_PAGE)
+        })
     }
     catch(err){
-        console.log(err)
-        res.status(500).json({
-            message: "Unable to retrieve Restaurant details !"
-        })
+        res.status(500).json({ message: "Unable to retrieve Restaurant details !" })
     }
 };
 
