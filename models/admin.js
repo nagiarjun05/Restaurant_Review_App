@@ -9,7 +9,10 @@ const Admin=sequelize.define('admin',{
     allowNull: false,
     primaryKey: true
   },
-  name:Sequelize.STRING,
+  name:{
+    type:Sequelize.STRING,
+    allowNull: false
+  },
   email:{
     type: Sequelize.STRING,
     allowNull: false,
@@ -18,7 +21,7 @@ const Admin=sequelize.define('admin',{
   password:{
     type: Sequelize.STRING,
     allowNull: false
-  },
+  }
 });
 
 module.exports=Admin;

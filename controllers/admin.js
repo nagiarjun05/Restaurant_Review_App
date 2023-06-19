@@ -3,8 +3,8 @@ const Restaurant=require('../models/restaurant');
 const Review=require('../models/review');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
-const Sequelize=require('sequelize');
 const sequelize=require('../util/database');
+let ITEM_PER_PAGE=4;
 
 var stringValidator=string=>string===undefined||string.length===0?true:false;
 
@@ -38,17 +38,15 @@ const login=async (req, res)=>{
     try{
         const {email, password}=req.body;
 
-        const admin= await Admin.findAll({ where : { email }})
+        const admin= await Admin.findOne({ where : { 'email':email }})
                 
-        if(admin.length>0){
-            bcrypt.compare(password, admin[0].password, (err, result)=>{
+        if(admin){
+            bcrypt.compare(password, admin.password, (err, result)=>{
                 if(err) throw new Error('Something went wrong')
                 else if(result){
-                    return res.status(200).json({success: true, message: 'User Logged in Succesfully!', token:(generateTokken(admin[0].id,admin[0].name))})
+                    return res.status(200).json({success: true, message: 'User Logged in Succesfully!', token:(generateTokken(admin.id,admin.name))})
                 }
-                else{
-                    return res.status(401).json({success: false, message: 'Please check your username/password!'})
-                }
+                else return res.status(401).json({success: false, message: 'Please check your username/password!'})
             })
         }else{
             return res.status(404).json({success: false, message: `User Doesn't Exist!`})
@@ -62,27 +60,50 @@ const login=async (req, res)=>{
 const getRestaurants=async function(req,res){
     try{
         const restReviewDet=await Restaurant.findAll({
-            attributes:['id','name',[sequelize.fn('count',sequelize.col('reviews.id')),'reviewCount']],
-            include:[
-                {
-                    model: Review,
-                    attributes:[]
-                }
-            ],
-            group:['restaurant.id']
-        });
-
+                attributes:['id','name',[sequelize.fn('count',sequelize.col('reviews.id')),'reviewCount']],
+                include:[
+                    {
+                        model: Review,
+                        attributes:[]
+                    }
+                ],
+                group:['restaurant.id'],
+                // order:[['reviewCount', 'desc']]
+            });
         if(restReviewDet.length>0) return res.status(201).json({ success: true, restReviewDet: restReviewDet})
         return res.status(404).json({message: "There is not any restaurant in the list!"})
     }
     catch(err){
+        console.log(err)
         return res.status(500).json({ message: "Unable to retrieve Restaurants Details !" })
     }
 };
 
 
+const postRestaurant=async function(req,res){
+    try{
+        const {restaurantName,restaurantAddress,restaurantDescription}=req.body;
+        console.log(req.body)
+
+        if (stringValidator(restaurantName)||stringValidator(restaurantAddress)||stringValidator(restaurantDescription)){
+            return res.status(401).json({err:"Invalid details"})}
+
+        const restaurant= await Restaurant.findOne({where:{'name': restaurantName, 'address': restaurantAddress, 'details':restaurantDescription}})
+        
+        if(restaurant) return res.status(403).json({success: false, message: "Restaurant Already Registered"});
+
+        await Restaurant.create({ name : restaurantName , address : restaurantAddress , details : restaurantDescription });
+        return res.status(201).json({success: true, message: "Succesfully Add Restaurant"});
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).json({ message: "Something went wrong internally" })
+    }
+};
+
 module.exports={
-    signup,
+    signup, 
     login,
-    getRestaurants
+    getRestaurants,
+    postRestaurant
 };
